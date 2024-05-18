@@ -145,7 +145,7 @@ const loginUser= asyncHandler(async(req,res)=>{
     const isPasswordValid = await user.isPasswordCorrect(password)
 
     if(!isPasswordValid){
-        throw new ApiError(401,"Inavlid user credentials")
+        throw new ApiError(401,"Invalid user credentials")
 
     }
 
@@ -181,8 +181,8 @@ const logoutUser =asyncHandler(async(req,res)=>{
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set:{
-                refreshToken:undefined
+            $unset:{  //set :{refreshToken:undefined}
+                refreshToken:1// this removes the field from document
             }
         },{
             new:true
