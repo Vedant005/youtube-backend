@@ -175,7 +175,6 @@ const loginUser= asyncHandler(async(req,res)=>{
  
 })
 
-
 const logoutUser =asyncHandler(async(req,res)=>{
 
     await User.findByIdAndUpdate(
@@ -253,7 +252,6 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
 
 
 })
-
 
 const changeCurrentPassword =  asyncHandler(async(req,res)=>{
     const {oldPassword,newPassword}= req.body
@@ -376,7 +374,6 @@ const updateUserCoverImage  = asyncHandler(async(req,res)=>{
     )
 
 })
-
 
 const getUserChannelProfile = asyncHandler(async(req,res)=>{
 
@@ -508,8 +505,6 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
         )
     )
 })
-
-
 
 export {registerUser,
     loginUser,
