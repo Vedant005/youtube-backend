@@ -73,7 +73,9 @@ const getVideoComments = asyncHandler(async (req, res) => {
 
     ])
 
-
+    if(!videoComments){
+        throw new ApiError(400,videoComments,"All comments fetched!")
+    }
 })
 
 const addComment = asyncHandler(async (req, res) => {
