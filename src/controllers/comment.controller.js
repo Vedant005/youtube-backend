@@ -121,7 +121,7 @@ const updateComment = asyncHandler(async (req, res) => {
         throw new ApiError(400,"Invalid video id")
     }
     
-    const updateComment = Comment.findByIdAndUpdate(
+    const updateComment = await Comment.findByIdAndUpdate(
         commentId,
         { 
             $set: {
