@@ -81,6 +81,18 @@ const updateTweet = asyncHandler(async (req, res) => {
 
 const deleteTweet = asyncHandler(async (req, res) => {
   //TODO: delete tweet
+
+  const { tweetId } = req.params;
+
+  const tweet = await Tweet.findById(tweetId);
+
+  if (!tweet) {
+    throw new ApiError(400, "tweet not found!");
+  }
+
+  await Tweet.findByIdAndDelete(tweetId);
+
+  return res.status(200).json(new ApiResponse(200, "Tweet deleted!"));
 });
 
 export { createTweet, getUserTweets, updateTweet, deleteTweet };
