@@ -19,6 +19,17 @@ const publishAVideo = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required");
   }
 
+   if ([title, description].some((field) => field?.trim() === "")) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+   if ([title, description].some((field) => field?.trim() === "")) {
+    throw new ApiError(400, "All fields are required");
+  }
+   if ([title, description].some((field) => field?.trim() === "")) {
+    throw new ApiError(400, "All fields are required");
+  }
+
   const videoFileLocalPath = req.files?.videoFile[0].path;
   const thumbnailLocalPath = req.files?.thumbnail[0].path;
 
