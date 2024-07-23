@@ -14,8 +14,10 @@ const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
     console.log(user);
+
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
+
     console.log("access token---> ", accessToken);
     console.log("refresh Token----> ", refreshToken);
     user.refreshToken = refreshToken;
