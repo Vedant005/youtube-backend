@@ -51,14 +51,16 @@ Cloudinary
 
 # Installation and Setup
   Clone the repository:
-
- > gh repo clone Vedant005/youtube-backend
-
+```
+  gh repo clone Vedant005/youtube-backend
+```
 Install dependencies:
-
->cd youtube-backend
->npm install
-
+```
+cd youtube-backend
+```
+```
+npm install
+```
 Set up environment variables: Create a .env in root of project and fill in the required values in the .env file using .env.sample file
 
 Start the server:
