@@ -159,7 +159,7 @@ const loginUser = asyncHandler(async (req, res) => {
   );
 
   const options = {
-    htttpOnly: true,
+    httpOnly: true,
     secure: true,
   };
 
@@ -194,7 +194,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     }
   );
   const options = {
-    htttpOnly: true,
+    httpOnly: true,
     secure: true,
   };
   return res
@@ -228,7 +228,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     }
 
     const options = {
-      htttpOnly: true,
+      httpOnly: true,
       secure: true,
     };
 
