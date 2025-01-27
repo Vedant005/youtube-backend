@@ -7,8 +7,51 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-  //TODO: get all videos based on query, sort, pagination
+  const {
+    page = 1,
+    limit = 10,
+    query,
+    sortBy = "createdAt",
+    sortType = "desc",
+    userId,
+  } = req.query;
+
+  // Convert to numeric values
+  const pageNumber = parseInt(page, 10);
+  const pageSize = parseInt(limit, 10);
+
+  const filter = {};
+  if (query) {
+    filter.title = { $regex: query, $options: "i" }; // Search by title
+  }
+  if (userId) {
+    filter.userId = userId;
+  }
+
+  const sort = {};
+  sort[sortBy] = sortType === "asc" ? 1 : -1;
+
+  try {
+    const videos = await Video.find(filter)
+      .sort(sort)
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize);
+
+    const totalVideos = await Video.countDocuments(filter);
+
+    res.status(200).json({
+      videos,
+      pagination: {
+        currentPage: pageNumber,
+        totalPages: Math.ceil(totalVideos / pageSize),
+        totalVideos,
+      },
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching videos", error: error.message });
+  }
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
