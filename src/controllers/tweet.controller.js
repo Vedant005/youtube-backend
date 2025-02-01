@@ -105,6 +105,10 @@ const getUserTweets = asyncHandler(async (req, res) => {
       },
     },
   ]);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, tweets, "All tweets fecthed"));
 });
 
 const updateTweet = asyncHandler(async (req, res) => {
