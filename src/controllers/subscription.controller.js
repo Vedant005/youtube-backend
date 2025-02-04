@@ -23,12 +23,14 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, "Unsubscirbed!"));
   }
 
-  await Subscription.create({
+  const list = await Subscription.create({
     subscriber: req.user._id,
     channel: channelId,
   });
 
-  return res.status(200).json(200, "Subscribed!");
+  console.log(list);
+
+  return res.status(200).json(new ApiResponse(200, "Subscribed!"));
 });
 
 // controller to return subscriber list of a channel
@@ -113,7 +115,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
   const subscribedChannels = await Subscription.aggregate([
     {
       $match: {
-        _id: new mongoose.Types.ObjectId(subscriberId),
+        subscriber: new mongoose.Types.ObjectId(subscriberId),
       },
     },
     {
@@ -121,33 +123,53 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
         from: "users",
         localField: "channel",
         foreignField: "_id",
-        as: "channel",
+        as: "subscribedChannel",
         pipeline: [
           {
-            $project: {
-              username: 1,
-              avatar: 1,
-              fullName: 1,
+            $lookup: {
+              from: "videos",
+              localField: "_id",
+              foreignField: "owner",
+              as: "videos",
+            },
+          },
+          {
+            $addFields: {
+              latestVideo: {
+                $last: "$videos",
+              },
             },
           },
         ],
       },
     },
     {
-      $unwind: "$channel",
+      $unwind: "$subscribedChannel",
     },
     {
       $project: {
         _id: 0,
-        channel: {
+        subscribedChannel: {
           _id: 1,
           username: 1,
           fullName: 1,
           "avatar.url": 1,
+          latestVideo: {
+            _id: 1,
+            "videoFile.url": 1,
+            "thumbnail.url": 1,
+            owner: 1,
+            title: 1,
+            description: 1,
+            duration: 1,
+            createdAt: 1,
+            views: 1,
+          },
         },
       },
     },
   ]);
+  console.log(subscribedChannels);
 
   if (!subscribedChannels) {
     throw new ApiError(400, "Could not fetched channels");
