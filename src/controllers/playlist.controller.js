@@ -96,7 +96,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Playlist not available");
   }
 
-  const getPlayist = await Playlist.aggregate([
+  const getPlaylist = await Playlist.aggregate([
     {
       $match: {
         _id: new mongoose.Types.ObjectId(playlistId),
@@ -161,7 +161,9 @@ const getPlaylistById = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, getPlayist[0], "playlist fetched successfully"));
+    .json(
+      new ApiResponse(200, getPlaylist[0], "playlist fetched successfully")
+    );
 });
 
 const addVideoToPlaylist = asyncHandler(async (req, res) => {
