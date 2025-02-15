@@ -79,6 +79,12 @@ const getChannelVideos = asyncHandler(async (req, res) => {
     },
   ]);
 
+  if (!videos) {
+    return res
+      .status(200)
+      .json(new ApiResponse(201, "This channel does not yet have any videos!"));
+  }
+
   return res
     .status(200)
     .json(new ApiResponse(200, videos, "channel stats fetched successfully"));
