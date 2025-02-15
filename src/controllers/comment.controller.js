@@ -73,8 +73,18 @@ const getVideoComments = asyncHandler(async (req, res) => {
   ]);
 
   if (!videoComments) {
-    throw new ApiError(400, videoComments, "All comments fetched!");
+    throw new ApiError(400, "All comments fetched!");
   }
+  const options = {
+    page: parseInt(page, 10),
+    limit: parseInt(limit, 10),
+  };
+
+  const comments = await Comment.aggregatePaginate(videoComments, options);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, comments, " Video comments fetched"));
 });
 
 const addComment = asyncHandler(async (req, res) => {
@@ -137,21 +147,21 @@ const updateComment = asyncHandler(async (req, res) => {
 
 const deleteComment = asyncHandler(async (req, res) => {
   // TODO: delete a comment
-  const { content } = req.body;
   const { commentId } = req.params;
-
-  if (!content) {
-    throw new ApiError(400, "Comment not found!");
-  }
   if (!commentId) {
-    throw new ApiError(400, "Invalid video id");
+    throw new ApiError(400, "Invalid comment id");
   }
+
+  const findComment = Comment.findById(commentId);
+
+  if (!findComment) throw new ApiError(401, "Comment does not exist");
 
   const deleteComment = await Comment.findByIdAndDelete(commentId);
+  if (!deleteComment) {
+    throw new ApiError(400, "error deleting comment");
+  }
 
-  return res
-    .status(200)
-    .json(200, new ApiResponse(200, deleteComment, "Comment deleted"));
+  return res.status(200).json(new ApiResponse(200, "Comment deleted"));
 });
 
 export { getVideoComments, addComment, updateComment, deleteComment };
