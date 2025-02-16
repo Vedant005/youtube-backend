@@ -28,16 +28,12 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     channel: channelId,
   });
 
-  console.log(list);
-
-  return res.status(200).json(new ApiResponse(200, "Subscribed!"));
+  return res.status(200).json(new ApiResponse(200, list, "Subscribed!"));
 });
 
 // controller to return subscriber list of a channel
 const getUserChannelSubscribers = asyncHandler(async (req, res) => {
-  const { channelId } = req.params;
-
-  // const channel  = await User.
+  const channelId = req.user._id;
 
   const channelSubscribers = await Subscription.aggregate([
     {
@@ -110,7 +106,7 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 
 // controller to return channel list to which user has subscribed
 const getSubscribedChannels = asyncHandler(async (req, res) => {
-  const { subscriberId } = req.params;
+  const subscriberId = req.user._id;
 
   const subscribedChannels = await Subscription.aggregate([
     {
