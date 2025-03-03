@@ -28,7 +28,7 @@ const createTweet = asyncHandler(async (req, res) => {
 const getUserTweets = asyncHandler(async (req, res) => {
   // TODO: get user tweets
 
-  const { userId } = req.params;
+  const userId = req.user._id;
 
   const user = await User.findById(userId);
 
