@@ -141,8 +141,6 @@ const updateTweet = asyncHandler(async (req, res) => {
 });
 
 const deleteTweet = asyncHandler(async (req, res) => {
-  //TODO: delete tweet
-
   const { tweetId } = req.params;
 
   const tweet = await Tweet.findById(tweetId);
