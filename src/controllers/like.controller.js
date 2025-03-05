@@ -87,6 +87,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     {
       $match: {
         likedBy: new mongoose.Types.ObjectId(req.user._id),
+        video: { $exists: true }, // Ensuring it's a video like
       },
     },
     {
@@ -108,25 +109,37 @@ const getLikedVideos = asyncHandler(async (req, res) => {
       },
     },
     {
+      $unwind: "$likedVideos",
+    },
+    {
+      $project: {
+        _id: "$likedVideos._id",
+        videoUrl: "$likedVideos.videoFile.url",
+        thumbnailUrl: "$likedVideos.thumbnail.url",
+        owner: "$likedVideos.owner",
+        views: "$likedVideos.views",
+        isPublished: "$likedVideos.isPublished",
+        title: "$likedVideos.title",
+        description: "$likedVideos.description",
+        duration: "$likedVideos.duration",
+        createdAt: "$likedVideos.createdAt",
+        ownerDetails: {
+          username: "$likedVideos.owner.username",
+          fullName: "$likedVideos.owner.fullName",
+          avatarUrl: "$likedVideos.owner.avatar.url",
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        videos: { $push: "$$ROOT" },
+      },
+    },
+    {
       $project: {
         _id: 0,
-        likedVideo: {
-          _id: 1,
-          "videoFile.url": 1,
-          "thumbnail.url": 1,
-          owner: 1,
-          views: 1,
-          isPublished: 1,
-          title: 1,
-          description: 1,
-          duration: 1,
-          createdAt: 1,
-          ownerDetails: {
-            username: 1,
-            fullName: 1,
-            "avatar.url": 1,
-          },
-        },
+        videos: 1,
       },
     },
   ]);
