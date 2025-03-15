@@ -65,7 +65,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
         owner: {
           username: 1,
           fullName: 1,
-          "avatar.url": 1,
+          avatar: 1,
         },
         isLiked: 1,
       },
@@ -88,7 +88,6 @@ const getVideoComments = asyncHandler(async (req, res) => {
 });
 
 const addComment = asyncHandler(async (req, res) => {
-  // TODO: add a comment to a video
   const { content } = req.body;
   const { videoId } = req.params;
 
